@@ -13,6 +13,7 @@ import antd.setAddonBefore
 import antd.setDefaultValue
 import dev.tonycode.kmp.common.KvStoreUiState
 import dev.tonycode.kmp.web_js.util.getBuildInfo
+import dev.tonycode.kvstore.Operations
 import dev.tonycode.kvstore.TransactionalKeyValueStore
 import react.FC
 import react.Props
@@ -26,8 +27,8 @@ val App = FC<Props>("App") {
 
     val trkvs by useState(TransactionalKeyValueStore())
 
-    var cmd by useState("SET")
-    var cmdArgs by useState("key value")
+    var cmd: String by useState(Operations.first().first)
+    var cmdArgs: String? by useState(Operations.first().second)
 
     var uiState by useState(KvStoreUiState())
 
@@ -47,27 +48,14 @@ val App = FC<Props>("App") {
 
         Input {
             setAddonBefore(Select.create {
-                options = arrayOf(
-                    Option("SET"),
-                    Option("GET"),
-                    Option("DELETE"),
-                    Option("COUNT"),
-                    Option("BEGIN"),
-                    Option("COMMIT"),
-                    Option("ROLLBACK"),
-                )
+                options = Operations.map { Option(it.first) }.toTypedArray()
                 setDefaultValue(cmd)
-                onChange = {
-                    cmd = it
-                    cmdArgs = when (it) {  // not properly updates UI
-                        "SET" -> "key value"
-                        "GET", "DELETE" -> "key"
-                        "COUNT" -> "value"
-                        else -> ""
-                    }
+                onChange = { newCmd ->
+                    cmd = newCmd
+                    cmdArgs = Operations.firstOrNull { it.first == newCmd }?.second
                 }
             })
-            value = cmdArgs
+            value = cmdArgs ?: ""
 
             onChange = {
                 cmdArgs = it.target.value

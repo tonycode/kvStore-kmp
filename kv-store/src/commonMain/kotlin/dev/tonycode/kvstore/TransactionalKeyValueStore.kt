@@ -134,6 +134,16 @@ sealed class Operation {
     }
 }
 
+val Operations = listOf(
+    Pair("SET", "key value"),
+    Pair("GET", "key"),
+    Pair("DELETE", "key"),
+    Pair("COUNT", "value"),
+    Pair("BEGIN", null),
+    Pair("COMMIT", null),
+    Pair("ROLLBACK", null),
+)
+
 sealed class OperationResult {
     data object Success : OperationResult()
 
