@@ -18,8 +18,8 @@ val projectGroup = "dev.tonycode.kmp"
 val projectArtifact = "web-js"
 val projectPackage = "$projectGroup.$projectArtifact".replace("-", "_")
 val projectName = rootProject.name
-val projectVersion = "0.1.0-SNAPSHOT"
-val buildNumber = 1
+val projectVersion = "0.1.0"
+val buildNumber = 2
 val isProduction: Boolean = (properties["prod"] == "true")  // turn off debugging stuff (sourcemaps/logging/..) for prod
 
 group = projectGroup

@@ -16,8 +16,8 @@ val projectGroup = "dev.tonycode.kmp"
 val projectArtifact = "cli-native"
 val projectPackage = "$projectGroup.$projectArtifact".replace("-", "_")
 val projectName = rootProject.name
-val projectVersion = "0.1.0-SNAPSHOT"
-val buildNumber = 1
+val projectVersion = "0.1.0"
+val buildNumber = 2
 
 group = projectGroup
 version = projectVersion
