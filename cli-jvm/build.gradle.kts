@@ -48,11 +48,21 @@ application {
     mainClass = "$projectPackage.AppKt"
 }
 
+tasks.register<JavaExec>("runInteractive") {
+    group = "application"
+    description = "Run the application interactively"
+
+    mainClass = "$projectPackage.AppKt"
+    classpath = sourceSets["main"].runtimeClasspath
+
+    standardInput = System.`in` // Enable reading from stdin
+}
+
 
 dependencies {
     //// Core
     implementation(platform(libs.kotlin.bom))  // Align versions of all Kotlin components
     implementation(libs.kotlin.stdlib)
 
-    implementation(projects.sharedLib)
+    implementation(projects.kvStore)
 }

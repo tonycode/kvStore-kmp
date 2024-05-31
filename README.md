@@ -14,7 +14,7 @@ Kotlin MultiPlatform demo project
 ## console `cli-jvm`
 
 ```shell
-./gradlew cli-jvm:run
+./gradlew cli-jvm:runInteractive --console=plain
 ```
 
 
