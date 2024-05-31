@@ -2,45 +2,45 @@ package dev.tonycode.kvstore
 
 import dev.tonycode.kvstore.TransactionalKeyValueStore.Command
 import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
+import dev.tonycode.kvstore.tree.redblacktree.RedBlackTree
 
 
 /**
- * Implementation based on Kotlin stdlib's HashMap
+ * Implementation based on RedBlackTree
  *
  * Not thread-safe
  */
-class TransactionalKeyValueStoreImpl : TransactionalKeyValueStore {
+class TransactionalKeyValueStoreImpl2 : TransactionalKeyValueStore {
 
-    private val store = mutableListOf(hashMapOf<String, String>())
+    private val store = mutableListOf(RedBlackTree<String, String>())
 
 
     override fun onCommand(command: Command): ExecutionResult {
         when (command) {
             is Command.Set -> {
-                store.last()[command.key] = command.value
+                store.last().insert(command.key, command.value)
                 return ExecutionResult.Success
             }
 
             is Command.Get -> {
-                if (!store.last().containsKey(command.key)) return ExecutionResult.Error(MSG_KEY_NOT_SET)
+                val item = store.last().find(command.key) ?: return ExecutionResult.Error(MSG_KEY_NOT_SET)
 
-                val value = store.last()[command.key]!!
-                return ExecutionResult.SuccessWithResult(value)
+                return ExecutionResult.SuccessWithResult(item.second)
             }
 
             is Command.Delete -> {
-                store.last().remove(command.key)
+                store.last().delete(command.key)
                 return ExecutionResult.Success
             }
 
             is Command.Count -> {
-                val result = store.last().count { it.value == command.value }
+                val result = store.last().count { it.second == command.value }
                 return ExecutionResult.SuccessWithIntResult(result)
             }
 
             //region transaction commands
             is Command.Begin -> {
-                store.add(HashMap(store.last()))
+                store.add(store.last().clone())
                 return ExecutionResult.Success
             }
 

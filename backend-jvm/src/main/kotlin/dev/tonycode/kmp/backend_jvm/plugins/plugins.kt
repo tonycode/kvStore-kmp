@@ -5,7 +5,7 @@ import dev.tonycode.kmp.backend_jvm.util.getBuildInfo
 import dev.tonycode.kvstore.TransactionalKeyValueStore
 import dev.tonycode.kvstore.TransactionalKeyValueStore.Command
 import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
-import dev.tonycode.kvstore.TransactionalKeyValueStoreImpl
+import dev.tonycode.kvstore.TransactionalKeyValueStoreFactory
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -18,7 +18,7 @@ import io.ktor.server.routing.routing
 
 fun Application.configureRouting() {
 
-    val trkvs: TransactionalKeyValueStore = TransactionalKeyValueStoreImpl()
+    val trkvs: TransactionalKeyValueStore = TransactionalKeyValueStoreFactory.create()
 
 
     routing {

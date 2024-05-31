@@ -7,7 +7,11 @@ NB: The main project's goal is a demonstration of KMP library development, artif
 
 
 - interface: [TransactionalKeyValueStore](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStore.kt)
-- not thread-safe impl based on Kotlin stdlib HashMap: [TransactionalKeyValueStoreImpl](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl.kt)
+- [TransactionalKeyValueStoreImpl](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl.kt)
+    - not thread-safe impl based on Kotlin stdlib's HashMap
+- [TransactionalKeyValueStoreImpl2](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl2.kt)
+    - not thread-safe impl based on RedBlackTree (adapted version of [aostrouhhov/trees/redblacktree](https://github.com/aostrouhhov/trees/tree/master/src/redblacktree))
+
 
 commands:
 

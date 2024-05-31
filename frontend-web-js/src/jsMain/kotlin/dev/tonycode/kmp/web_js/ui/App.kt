@@ -14,7 +14,7 @@ import antd.setDefaultValue
 import dev.tonycode.kmp.common.KvStoreUiState
 import dev.tonycode.kmp.web_js.util.getBuildInfo
 import dev.tonycode.kvstore.TransactionalKeyValueStore
-import dev.tonycode.kvstore.TransactionalKeyValueStoreImpl
+import dev.tonycode.kvstore.TransactionalKeyValueStoreFactory
 import react.FC
 import react.Props
 import react.create
@@ -25,7 +25,7 @@ import react.useState
 
 val App = FC<Props>("App") {
 
-    val trkvs: TransactionalKeyValueStore by useState(TransactionalKeyValueStoreImpl())
+    val trkvs: TransactionalKeyValueStore by useState(TransactionalKeyValueStoreFactory.create())
 
     var commandKey: String by useState(TransactionalKeyValueStore.commands.first().first)
     var commandArgs: String? by useState(TransactionalKeyValueStore.commands.first().second)
