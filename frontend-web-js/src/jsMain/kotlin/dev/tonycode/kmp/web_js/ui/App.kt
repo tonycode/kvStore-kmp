@@ -13,7 +13,6 @@ import antd.setAddonBefore
 import antd.setDefaultValue
 import dev.tonycode.kmp.common.KvStoreUiState
 import dev.tonycode.kmp.web_js.util.getBuildInfo
-import dev.tonycode.kvstore.Operations
 import dev.tonycode.kvstore.TransactionalKeyValueStore
 import react.FC
 import react.Props
@@ -27,8 +26,8 @@ val App = FC<Props>("App") {
 
     val trkvs by useState(TransactionalKeyValueStore())
 
-    var cmd: String by useState(Operations.first().first)
-    var cmdArgs: String? by useState(Operations.first().second)
+    var commandKey: String by useState(TransactionalKeyValueStore.commands.first().first)
+    var commandArgs: String? by useState(TransactionalKeyValueStore.commands.first().second)
 
     var uiState by useState(KvStoreUiState())
 
@@ -43,22 +42,22 @@ val App = FC<Props>("App") {
         }
         Typography.Text {
             code = true
-            +"(cmd = $cmd ; cmdArgs = $cmdArgs)"
+            +"(commandKey = $commandKey ; commandArgs = $commandArgs)"
         }
 
         Input {
             setAddonBefore(Select.create {
-                options = Operations.map { Option(it.first) }.toTypedArray()
-                setDefaultValue(cmd)
+                options = TransactionalKeyValueStore.commands.map { Option(it.first) }.toTypedArray()
+                setDefaultValue(commandKey)
                 onChange = { newCmd ->
-                    cmd = newCmd
-                    cmdArgs = Operations.firstOrNull { it.first == newCmd }?.second
+                    commandKey = newCmd
+                    commandArgs = TransactionalKeyValueStore.commands.firstOrNull { it.first == newCmd }?.second
                 }
             })
-            value = cmdArgs ?: ""
+            value = commandArgs ?: ""
 
             onChange = {
-                cmdArgs = it.target.value
+                commandArgs = it.target.value
             }
         }
 
@@ -67,10 +66,10 @@ val App = FC<Props>("App") {
             +"Execute"
 
             onClick = {
-                val s = "$cmd $cmdArgs"
-                //console.log("s = $s")  //DEBUG
+                val commandString = "$commandKey $commandArgs"
+                //console.log("commandString = $commandString")  //DEBUG
 
-                uiState = uiState.mutate(s, trkvs)
+                uiState = uiState.mutate(commandString, trkvs)
             }
         }
 

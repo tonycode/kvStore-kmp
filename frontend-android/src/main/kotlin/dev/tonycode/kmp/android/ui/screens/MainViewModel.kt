@@ -17,9 +17,9 @@ class MainViewModel : ViewModel() {
     private val trkvs = TransactionalKeyValueStore()
 
 
-    fun onCommand(cmd: String) {
+    fun onCommand(commandString: String) {
         viewModelScope.launch {
-            _uiState.value = uiState.value.mutate(cmd, trkvs)
+            _uiState.value = uiState.value.mutate(commandString, trkvs)
         }
     }
 

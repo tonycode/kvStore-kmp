@@ -1,7 +1,7 @@
 package dev.tonycode.kmp.common
 
-import dev.tonycode.kvstore.Operation
-import dev.tonycode.kvstore.OperationResult
+import dev.tonycode.kvstore.TransactionalKeyValueStore.Command
+import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
 import dev.tonycode.kvstore.TransactionalKeyValueStore
 
 
@@ -10,12 +10,12 @@ data class KvStoreUiState(
     val executionResult: String? = null,
 ) {
     fun mutate(
-        cmd: String,
+        commandString: String,
         trkvs: TransactionalKeyValueStore
     ): KvStoreUiState {
-        val op: Operation
+        val command: Command
         try {
-            op = Operation.fromString(cmd)
+            command = Command.fromString(commandString)
         } catch (iae: IllegalArgumentException) {
             return KvStoreUiState(
                 executionResult = (iae.message ?: "unknown error")
@@ -24,15 +24,15 @@ data class KvStoreUiState(
 
         return KvStoreUiState(
             executionResult = when (
-                val opResult = trkvs.onOperation(op)
+                val execResult = trkvs.onCommand(command)
             ) {
-                is OperationResult.Success -> "OK"
+                is ExecutionResult.Success -> "OK"
 
-                is OperationResult.SuccessWithResult -> opResult.result
+                is ExecutionResult.SuccessWithResult -> execResult.result
 
-                is OperationResult.SuccessWithIntResult -> opResult.result.toString()
+                is ExecutionResult.SuccessWithIntResult -> execResult.result.toString()
 
-                is OperationResult.Error -> opResult.errorMessage
+                is ExecutionResult.Error -> execResult.errorMessage
             }
         )
     }

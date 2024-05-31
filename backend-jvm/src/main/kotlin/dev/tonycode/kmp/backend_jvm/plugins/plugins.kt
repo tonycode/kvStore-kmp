@@ -2,9 +2,9 @@ package dev.tonycode.kmp.backend_jvm.plugins
 
 import dev.tonycode.kmp.backend_jvm.BuildConfig
 import dev.tonycode.kmp.backend_jvm.util.getBuildInfo
-import dev.tonycode.kvstore.Operation
-import dev.tonycode.kvstore.OperationResult
 import dev.tonycode.kvstore.TransactionalKeyValueStore
+import dev.tonycode.kvstore.TransactionalKeyValueStore.Command
+import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -39,11 +39,11 @@ fun Application.configureRouting() {
         }
 
         post {
-            val s = call.receive<String>()
+            val commandString = call.receive<String>()
 
-            val op: Operation
+            val command: Command
             try {
-                op = Operation.fromString(s)
+                command = Command.fromString(commandString)
             } catch (iae: IllegalArgumentException) {
                 call.respondText(
                     status = HttpStatusCode.BadRequest,
@@ -53,26 +53,26 @@ fun Application.configureRouting() {
             }
 
             when (
-                val opResult = trkvs.onOperation(op)
+                val executionResult = trkvs.onCommand(command)
             ) {
-                is OperationResult.Success -> call.respondText(
+                is ExecutionResult.Success -> call.respondText(
                     status = HttpStatusCode.OK,
                     text = "OK"
                 )
 
-                is OperationResult.SuccessWithResult -> call.respondText(
+                is ExecutionResult.SuccessWithResult -> call.respondText(
                     status = HttpStatusCode.OK,
-                    text = opResult.result
+                    text = executionResult.result
                 )
 
-                is OperationResult.SuccessWithIntResult -> call.respondText(
+                is ExecutionResult.SuccessWithIntResult -> call.respondText(
                     status = HttpStatusCode.OK,
-                    text = opResult.result.toString()
+                    text = executionResult.result.toString()
                 )
 
-                is OperationResult.Error -> call.respondText(
+                is ExecutionResult.Error -> call.respondText(
                     status = HttpStatusCode.BadRequest,
-                    text = opResult.errorMessage
+                    text = executionResult.errorMessage
                 )
             }
         }

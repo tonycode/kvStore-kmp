@@ -30,7 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.tonycode.kmp.android.ui.preview.ScreenPreview
 import dev.tonycode.kmp.android.ui.util.FontScalePreviews
 import dev.tonycode.kmp.android.ui.util.LightDarkPreviews
-import dev.tonycode.kvstore.Operations
+import dev.tonycode.kvstore.TransactionalKeyValueStore
 
 
 @Composable
@@ -39,8 +39,8 @@ fun MainScreen(
     mainViewModel: MainViewModel = viewModel(),
 ) {
 
-    var cmdIdx by remember { mutableIntStateOf(0) }
-    var cmdArgs by remember { mutableStateOf(Operations[0].second) }
+    var commandIdx by remember { mutableIntStateOf(0) }
+    var commandArgs by remember { mutableStateOf(TransactionalKeyValueStore.commands[0].second) }
 
     val uiState by mainViewModel.uiState.collectAsState()
 
@@ -60,16 +60,16 @@ fun MainScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            itemsIndexed(Operations) { index, item ->
+            itemsIndexed(TransactionalKeyValueStore.commands) { index, item ->
                 Text(
                     text = item.first,
                     modifier = Modifier
                         .background(
-                            color = if (index != cmdIdx) Color.LightGray else Color.Yellow,
+                            color = if (index != commandIdx) Color.LightGray else Color.Yellow,
                             shape = RoundedCornerShape(15)
                         ).clickable {
-                            cmdIdx = index
-                            cmdArgs = item.second
+                            commandIdx = index
+                            commandArgs = item.second
                         }.padding(horizontal = 4.dp, vertical = 2.dp)
                 )
             }
@@ -77,7 +77,7 @@ fun MainScreen(
         Spacer(Modifier.height(4.dp))
 
         // Optional command arguments
-        if (Operations[cmdIdx].second != null) {
+        if (TransactionalKeyValueStore.commands[commandIdx].second != null) {
             Text(
                 text = "Enter arguments:",
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -86,8 +86,8 @@ fun MainScreen(
 
             TextField(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                value = cmdArgs ?: "",
-                onValueChange = { cmdArgs = it },
+                value = commandArgs ?: "",
+                onValueChange = { commandArgs = it },
             )
             Spacer(Modifier.height(12.dp))
         }
@@ -97,7 +97,8 @@ fun MainScreen(
             modifier = Modifier.padding(horizontal = 16.dp),
             onClick = {
                 mainViewModel.onCommand(
-                    Operations[cmdIdx].first + (if (cmdArgs != null) " $cmdArgs" else "")
+                    TransactionalKeyValueStore.commands[commandIdx].first +
+                        (if (commandArgs != null) " $commandArgs" else "")
                 )
             }
         ) { Text("Execute") }

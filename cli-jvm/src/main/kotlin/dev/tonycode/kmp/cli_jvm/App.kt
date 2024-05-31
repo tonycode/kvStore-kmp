@@ -1,9 +1,9 @@
 package dev.tonycode.kmp.cli_jvm
 
 import dev.tonycode.kmp.cli_jvm.util.getBuildInfo
-import dev.tonycode.kvstore.Operation
-import dev.tonycode.kvstore.OperationResult
 import dev.tonycode.kvstore.TransactionalKeyValueStore
+import dev.tonycode.kvstore.TransactionalKeyValueStore.Command
+import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
 
 
 fun main() {
@@ -19,26 +19,26 @@ fun main() {
 
     do {
         print("> ")
-        val s = readlnOrNull() ?: return
+        val commandString = readlnOrNull() ?: return
 
-        val op: Operation
+        val command: Command
         try {
-            op = Operation.fromString(s)
+            command = Command.fromString(commandString)
         } catch (iae: IllegalArgumentException) {
             println(iae.message ?: "unknown error")
             continue
         }
 
         when (
-            val opResult = trkvs.onOperation(op)
+            val executionResult = trkvs.onCommand(command)
         ) {
-            is OperationResult.Success -> { }
+            is ExecutionResult.Success -> { }
 
-            is OperationResult.SuccessWithResult -> println(opResult.result)
+            is ExecutionResult.SuccessWithResult -> println(executionResult.result)
 
-            is OperationResult.SuccessWithIntResult -> println(opResult.result.toString())
+            is ExecutionResult.SuccessWithIntResult -> println(executionResult.result.toString())
 
-            is OperationResult.Error -> println(opResult.errorMessage)
+            is ExecutionResult.Error -> println(executionResult.errorMessage)
         }
 
     } while(true)
