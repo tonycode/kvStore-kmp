@@ -67,6 +67,7 @@ kotlin-wrappers-bom = { module = "org.jetbrains.kotlin-wrappers:kotlin-wrappers-
 kotlinw-emotion = { module = "org.jetbrains.kotlin-wrappers:kotlin-emotion" }  # React Emotion (CSS), 11.11.4
 kotlinw-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-react" }  # React, 18.2.0
 kotlinw-react-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-dom" }  # React DOM, 18.2.0
+kotlinw-antd = "dev.tonycode.kotlin-wrappers:kotlin-antd:5.10.3-pre.1"
 
 
 [bundles]

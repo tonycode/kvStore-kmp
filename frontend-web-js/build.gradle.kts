@@ -65,13 +65,14 @@ kotlin {
                 implementation(project.dependencies.platform(libs.kotlin.bom.get()))  // Align versions of all Kotlin components
                 implementation(libs.kotlin.stdlib)
 
-                implementation(projects.sharedLib)
+                implementation(projects.kvStore)
 
                 //// UI
                 implementation(project.dependencies.platform(libs.kotlin.wrappers.bom.get()))
                 implementation(libs.kotlinw.react)
                 implementation(libs.kotlinw.react.dom)
                 implementation(libs.kotlinw.emotion)
+                implementation(libs.kotlinw.antd)
             }
         }
     }
