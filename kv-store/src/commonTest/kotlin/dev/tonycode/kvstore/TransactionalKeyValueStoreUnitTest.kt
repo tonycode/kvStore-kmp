@@ -8,7 +8,7 @@ import kotlin.test.Test
 
 class TransactionalKeyValueStoreUnitTest {
 
-    private val trkvs = TransactionalKeyValueStore()
+    private val trkvs: TransactionalKeyValueStore = TransactionalKeyValueStoreImpl()
 
 
     @Test

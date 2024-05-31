@@ -4,6 +4,7 @@ import dev.tonycode.kmp.cli_native.util.getBuildInfo
 import dev.tonycode.kvstore.TransactionalKeyValueStore
 import dev.tonycode.kvstore.TransactionalKeyValueStore.Command
 import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
+import dev.tonycode.kvstore.TransactionalKeyValueStoreImpl
 
 
 fun main() {
@@ -15,7 +16,7 @@ fun main() {
 
     """.trimIndent())
 
-    val trkvs = TransactionalKeyValueStore()
+    val trkvs: TransactionalKeyValueStore = TransactionalKeyValueStoreImpl()
 
     do {
         print("> ")
