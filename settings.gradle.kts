@@ -30,6 +30,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
     "shared-lib",
+    "kv-store",
     "cli-native",
     "cli-jvm",
     "backend-jvm",

@@ -34,6 +34,7 @@ kotlinWrappersBom = "1.0.0-pre.718"
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+truthish = "com.varabyte.truthish:truthish:1.0.1"  # Google Truth for KMP (https://github.com/varabyte/truthish)
 
 ## backend
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
