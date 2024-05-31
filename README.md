@@ -8,9 +8,9 @@ NB: The main project's goal is a demonstration of KMP library development, artif
 
 - interface: [TransactionalKeyValueStore](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStore.kt)
 - [TransactionalKeyValueStoreImpl](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl.kt)
-    - not thread-safe impl based on Kotlin stdlib's HashMap
+    - not thread-safe in-memory impl based on Kotlin stdlib's HashMap
 - [TransactionalKeyValueStoreImpl2](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl2.kt)
-    - not thread-safe impl based on RedBlackTree (adapted version of [aostrouhhov/trees/redblacktree](https://github.com/aostrouhhov/trees/tree/master/src/redblacktree))
+    - not thread-safe in-memory impl based on RedBlackTree (adapted version of [aostrouhhov/trees/redblacktree](https://github.com/aostrouhhov/trees/tree/master/src/redblacktree))
 
 
 commands:
@@ -86,9 +86,13 @@ curl -X POST -d "ROLLBACK" http://localhost:8080
 ./gradlew frontend-web-js:jsBrowserRun
 ```
 
+<a href="docs/screenshot-frontend-web-js.png"><img src="docs/screenshot-frontend-web-js.png" /></a>
+
+You can play with already deployed demo here:
+
+- [https://tonycode.dev/demos/kvStore-kmp-web-js-demo/](https://tonycode.dev/demos/kvStore-kmp-web-js-demo/)
+
 ### bundle distributable
 
-- `./gradlew frontend-web:jsBrowserDistribution -Pprod=true` (production - no source-maps)
-- see `frontend-web/build/dist/js/productionExecutable/*`
-
-<a href="docs/screenshot-frontend-web-js.png"><img src="docs/screenshot-frontend-web-js.png" /></a>
+- `./gradlew frontend-web-js:jsBrowserDistribution -Pprod=true` (production - no source-maps and logs)
+- see `frontend-web-js/build/dist/js/productionExecutable/*`
