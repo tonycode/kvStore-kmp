@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--region Theme.MinApp -->
+    <style name="Base.V21.Dark.Theme.MinApp" parent="Base.V21.Light.Theme.MinApp">
+        <item name="android:windowBackground">@color/splashscreen_bg_dark</item>
+    </style>
+
+    <style name="Base.V21.Theme.MinApp" parent="Base.V21.Dark.Theme.MinApp" />
+    <!--endregion-->
+
+</resources>

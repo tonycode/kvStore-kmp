@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--region Theme.MinApp -->
+    <style name="Base.V23.Theme.MinApp" parent="Base.V21.Theme.MinApp">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+    </style>
+
+    <style name="Base.Theme.MinApp" parent="Base.V23.Theme.MinApp" />
+    <!--endregion-->
+
+</resources>

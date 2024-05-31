@@ -1,0 +1,82 @@
+# More about this file: https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+
+[versions]
+gradle = "8.7"  # https://gradle.org/releases/
+kotlin = "1.9.22"  # match with "kotlin-dsl" plugin
+                   # check compose-compiler compatibility: https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+## jvm
+java = "11"
+
+## backend
+ktor = "2.3.11"
+
+## android
+minSdk = "21"  # Lollipop (required for Jetpack Compose)
+targetSdk = "34"  # Upside Down Cake
+compileSdk = "34"  # Upside Down Cake
+buildTools = "34.0.0"
+
+androidGradlePlugin = "8.2.0"
+composeBom = "2024.02.02"  # https://developer.android.com/jetpack/compose/bom/bom-mapping
+composeCompilerExtension = "1.5.10"
+
+hilt = "2.51"
+jacoco = "0.8.11"
+
+## web
+yarn = "1.22.22"  # https://www.npmjs.com/package/yarn
+nodejs = "20.14.0"  # https://nodejs.org/en - LTS
+
+kotlinWrappersBom = "1.0.0-pre.718"
+
+
+[libraries]
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
+
+## backend
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+logback = "ch.qos.logback:logback-classic:1.5.6"
+
+## android
+android-material = "com.google.android.material:material:1.11.0"
+androidx-activity-compose = "androidx.activity:activity-compose:1.8.2"
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }  # https://developer.android.com/jetpack/androidx/releases/compose-material3
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-constraintLayout-compose = "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+androidx-core-ktx = "androidx.core:core-ktx:1.12.0"
+androidx-core-splash = "androidx.core:core-splashscreen:1.0.1"
+androidx-lifecycle = "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
+androidx-lifecycle-viewmodel-compose = "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"
+androidx-test-espresso = "androidx.test.espresso:espresso-core:3.5.1"
+androidx-test-junit = "androidx.test.ext:junit:1.1.5"
+google-truth = "com.google.truth:truth:1.4.2"
+junit = "junit:junit:4.13.2"
+
+## web
+kotlin-wrappers-bom = { module = "org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom", version.ref = "kotlinWrappersBom" }
+kotlinw-emotion = { module = "org.jetbrains.kotlin-wrappers:kotlin-emotion" }  # React Emotion (CSS), 11.11.4
+kotlinw-react = { module = "org.jetbrains.kotlin-wrappers:kotlin-react" }  # React, 18.2.0
+kotlinw-react-dom = { module = "org.jetbrains.kotlin-wrappers:kotlin-react-dom" }  # React DOM, 18.2.0
+
+
+[bundles]
+
+
+[plugins]
+gradle-versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }  # Search for dependency updates (https://github.com/ben-manes/gradle-versions-plugin)
+buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.3.5" }  # Generates BuildConfig object (https://github.com/gmazzo/gradle-buildconfig-plugin)
+localproperties = { id = "com.github.b3er.local.properties", version = "1.1" }  # Merge local.properties into project.properties (https://github.com/b3er/gradle-local-properties-plugin)
+grgit = { id = "org.ajoberstar.grgit", version = "5.2.2" }  # Manipulate with project's git repo (https://github.com/ajoberstar/grgit)
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
