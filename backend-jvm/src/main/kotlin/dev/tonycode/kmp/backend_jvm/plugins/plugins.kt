@@ -2,7 +2,10 @@ package dev.tonycode.kmp.backend_jvm.plugins
 
 import dev.tonycode.kmp.backend_jvm.BuildConfig
 import dev.tonycode.kmp.backend_jvm.util.getBuildInfo
-import dev.tonycode.kmp.lib.Adder
+import dev.tonycode.kvstore.Operation
+import dev.tonycode.kvstore.OperationResult
+import dev.tonycode.kvstore.TransactionalKeyValueStore
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.request.receive
@@ -14,36 +17,64 @@ import io.ktor.server.routing.routing
 
 fun Application.configureRouting() {
 
-    val adder = Adder()
+    val trkvs = TransactionalKeyValueStore()
 
 
     routing {
 
-        get("/") {
-            call.application.environment.log.info(">>> got req!")
-            call.respondText("""
-                Hello, World from ${BuildConfig.APP_NAME}!
-                2 + 3 = ${ adder.add(2, 3) }
-            """.trimIndent())
-        }
-
         get("/ping") {
             call.respondText("""
                 pong!
+
                 ${ getBuildInfo() }
             """.trimIndent())
         }
 
-        post("/add") {
+        get {
+            call.respondText("""
+                Hello from ${BuildConfig.APP_NAME}!
+
+                Use POST to execute commands
+                """.trimIndent())
+        }
+
+        post {
             val s = call.receive<String>()
-            val numbers = s.split(Regex("\\s+")).map { it.toIntOrNull() }
-            if (numbers.size != 2 || numbers.any { it == null }) {
-                call.respondText("provide two integer numbers")
+
+            val op: Operation
+            try {
+                op = Operation.fromString(s)
+            } catch (iae: IllegalArgumentException) {
+                call.respondText(
+                    status = HttpStatusCode.BadRequest,
+                    text = iae.message ?: "unknown error"
+                )
                 return@post
             }
 
-            val result = adder.add(numbers[0]!!, numbers[1]!!)
-            call.respondText("result = $result")
+            when (
+                val opResult = trkvs.onOperation(op)
+            ) {
+                is OperationResult.Success -> call.respondText(
+                    status = HttpStatusCode.OK,
+                    text = "OK"
+                )
+
+                is OperationResult.SuccessWithResult -> call.respondText(
+                    status = HttpStatusCode.OK,
+                    text = opResult.result
+                )
+
+                is OperationResult.SuccessWithIntResult -> call.respondText(
+                    status = HttpStatusCode.OK,
+                    text = opResult.result.toString()
+                )
+
+                is OperationResult.Error -> call.respondText(
+                    status = HttpStatusCode.BadRequest,
+                    text = opResult.errorMessage
+                )
+            }
         }
 
     }

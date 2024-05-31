@@ -26,7 +26,14 @@ Kotlin MultiPlatform demo project
 
 - `curl http://0.0.0.0:8080`
 - `curl http://0.0.0.0:8080/ping`
-- `curl -X POST -d "2 3" http://localhost:8080/add`
+
+- `curl -X POST -d "SET foo 123" http://localhost:8080`
+- `curl -X POST -d "GET foo" http://localhost:8080`
+- `curl -X POST -d "DELETE foo" http://localhost:8080`
+- `curl -X POST -d "COUNT 123" http://localhost:8080`
+- `curl -X POST -d "BEGIN" http://localhost:8080`
+- `curl -X POST -d "COMMIT" http://localhost:8080`
+- `curl -X POST -d "ROLLBACK" http://localhost:8080`
 
 
 ## `frontend-android`

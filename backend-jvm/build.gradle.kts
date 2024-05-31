@@ -58,7 +58,7 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.logback)
 
-    implementation(projects.sharedLib)
+    implementation(projects.kvStore)
 }
 
 
