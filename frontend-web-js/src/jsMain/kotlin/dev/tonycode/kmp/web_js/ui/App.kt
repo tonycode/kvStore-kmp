@@ -67,7 +67,7 @@ val App = FC<Props>("App") {
             +"Execute"
 
             onClick = {
-                val commandString = "$commandKey $commandArgs"
+                val commandString = if (commandArgs != null) "$commandKey $commandArgs" else commandKey
                 //console.log("commandString = $commandString")  //DEBUG
 
                 uiState = uiState.mutate(commandString, trkvs)
