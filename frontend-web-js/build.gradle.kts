@@ -66,6 +66,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
 
                 implementation(projects.kvStore)
+                implementation(projects.frontendCommon)
 
                 //// UI
                 implementation(project.dependencies.platform(libs.kotlin.wrappers.bom.get()))

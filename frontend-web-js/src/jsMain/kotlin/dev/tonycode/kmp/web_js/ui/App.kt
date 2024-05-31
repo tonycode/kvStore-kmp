@@ -11,9 +11,8 @@ import antd.Space
 import antd.Typography
 import antd.setAddonBefore
 import antd.setDefaultValue
+import dev.tonycode.kmp.common.KvStoreUiState
 import dev.tonycode.kmp.web_js.util.getBuildInfo
-import dev.tonycode.kvstore.Operation
-import dev.tonycode.kvstore.OperationResult
 import dev.tonycode.kvstore.TransactionalKeyValueStore
 import react.FC
 import react.Props
@@ -30,7 +29,7 @@ val App = FC<Props>("App") {
     var cmd by useState("SET")
     var cmdArgs by useState("key value")
 
-    var executionResult by useState<String?>(null)
+    var uiState by useState(KvStoreUiState())
 
 
     Space {
@@ -83,36 +82,14 @@ val App = FC<Props>("App") {
                 val s = "$cmd $cmdArgs"
                 //console.log("s = $s")  //DEBUG
 
-                var op: Operation? = null
-                try {
-                    op = Operation.fromString(s)
-                } catch (iae: IllegalArgumentException) {
-                    executionResult = (iae.message ?: "unknown error")
-                }
-                //console.log("op = $op")  //DEBUG
-
-                op?.let {
-                    executionResult = when (
-                        val opResult = trkvs.onOperation(op)
-                    ) {
-                        is OperationResult.Success -> "OK"
-
-                        is OperationResult.SuccessWithResult -> opResult.result
-
-                        is OperationResult.SuccessWithIntResult -> opResult.result.toString()
-
-                        is OperationResult.Error -> opResult.errorMessage
-                    }
-                }
-
+                uiState = uiState.mutate(s, trkvs)
             }
         }
 
-        if (executionResult != null) {
+        uiState.executionResult?.let {
             Typography.Text {
                 code = true
-
-                +executionResult
+                +it
             }
         }
 
