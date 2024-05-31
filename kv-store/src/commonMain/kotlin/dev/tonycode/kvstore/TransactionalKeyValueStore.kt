@@ -93,6 +93,45 @@ sealed class Operation {
      * Revert to state prior to BEGIN call
      */
     data object Rollback : Operation()
+
+    companion object {
+        fun fromString(s: String): Operation {
+            val tokens = s.split(Regex("\\s+"))
+            if (tokens.isEmpty()) throw IllegalArgumentException(MSG_ERROR_EMPTY_COMMAND)
+
+            return when (tokens[0].uppercase()) {
+                "SET" -> if (tokens.size == 3) {
+                    Set(tokens[1], tokens[2])
+                } else throw IllegalArgumentException(MSG_ERROR_WRONG_COMMAND_ARGUMENTS)
+
+                "GET" -> if (tokens.size == 2) {
+                    Get(tokens[1])
+                } else throw IllegalArgumentException(MSG_ERROR_WRONG_COMMAND_ARGUMENTS)
+
+                "DELETE" -> if (tokens.size == 2) {
+                    Delete(tokens[1])
+                } else throw IllegalArgumentException(MSG_ERROR_WRONG_COMMAND_ARGUMENTS)
+
+                "COUNT" -> if (tokens.size == 2) {
+                    Count(tokens[1])
+                } else throw IllegalArgumentException(MSG_ERROR_WRONG_COMMAND_ARGUMENTS)
+
+                "BEGIN" -> if (tokens.size == 1) {
+                    Begin
+                } else throw IllegalArgumentException(MSG_ERROR_WRONG_COMMAND_ARGUMENTS)
+
+                "COMMIT" -> if (tokens.size == 1) {
+                    Commit
+                } else throw IllegalArgumentException(MSG_ERROR_WRONG_COMMAND_ARGUMENTS)
+
+                "ROLLBACK" -> if (tokens.size == 1) {
+                    Rollback
+                } else throw IllegalArgumentException(MSG_ERROR_WRONG_COMMAND_ARGUMENTS)
+
+                else -> throw IllegalArgumentException(MSG_ERROR_UNKNOWN_COMMAND)
+            }
+        }
+    }
 }
 
 sealed class OperationResult {
