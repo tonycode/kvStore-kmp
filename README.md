@@ -7,7 +7,7 @@ Kotlin MultiPlatform demo project
 ## console `cli-native`
 
 ```shell
-./gradlew cli-native:runDebugExecutableNative
+./gradlew cli-native:runDebugExecutableNative --console=plain
 ```
 
 

@@ -1,22 +1,45 @@
 package dev.tonycode.kmp.cli_native
 
 import dev.tonycode.kmp.cli_native.util.getBuildInfo
-import dev.tonycode.kmp.lib.Adder
+import dev.tonycode.kvstore.Operation
+import dev.tonycode.kvstore.OperationResult
+import dev.tonycode.kvstore.TransactionalKeyValueStore
 
 
-/**
- * @param args provided via `java -jar app/build/libs/app-<ver>-all.jar arg1 arg2 ...`
- *   or `./app/build/distributions/app-<ver>/bin/app arg1 arg2` (after `./gradlew distTar`)
- */
-fun main(args: Array<String>) {
+fun main() {
+
     println("""
         Hello from ${ BuildConfig.APP_NAME }!
 
         Version info: ${ getBuildInfo() }
 
-        args="${ args.joinToString("; ") }"
     """.trimIndent())
 
-    val adder = Adder()
-    println("2 + 3 = ${ adder.add(2, 3) }")
+    val trkvs = TransactionalKeyValueStore()
+
+    do {
+        print("> ")
+        val s = readlnOrNull() ?: return
+
+        val op: Operation
+        try {
+            op = Operation.fromString(s)
+        } catch (iae: IllegalArgumentException) {
+            println(iae.message ?: "unknown error")
+            continue
+        }
+
+        when (
+            val opResult = trkvs.onOperation(op)
+        ) {
+            is OperationResult.Success -> { }
+
+            is OperationResult.SuccessWithResult -> println(opResult.result)
+
+            is OperationResult.SuccessWithIntResult -> println(opResult.result.toString())
+
+            is OperationResult.Error -> println(opResult.errorMessage)
+        }
+
+    } while(true)
 }

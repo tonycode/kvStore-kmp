@@ -68,7 +68,11 @@ kotlin {
             implementation(project.dependencies.platform(libs.kotlin.bom))  // Align versions of all Kotlin components
             implementation(libs.kotlin.stdlib)
 
-            implementation(projects.sharedLib)
+            implementation(projects.kvStore)
         }
     }
+}
+
+tasks.withType<Exec> {
+    standardInput = System.`in` // Enable reading from stdin
 }
