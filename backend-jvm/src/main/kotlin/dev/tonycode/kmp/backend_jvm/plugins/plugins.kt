@@ -2,10 +2,10 @@ package dev.tonycode.kmp.backend_jvm.plugins
 
 import dev.tonycode.kmp.backend_jvm.BuildConfig
 import dev.tonycode.kmp.backend_jvm.util.getBuildInfo
-import dev.tonycode.kvstore.TransactionalKeyValueStore
 import dev.tonycode.kvstore.TransactionalKeyValueStore.Command
 import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
-import dev.tonycode.kvstore.TransactionalKeyValueStoreFactory
+import dev.tonycode.kvstore.coroutines.ConcurrentTransactionalKeyValueStore
+import dev.tonycode.kvstore.coroutines.ConcurrentTransactionalKeyValueStoreFactory
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -18,7 +18,7 @@ import io.ktor.server.routing.routing
 
 fun Application.configureRouting() {
 
-    val trkvs: TransactionalKeyValueStore = TransactionalKeyValueStoreFactory.create()
+    val ctrkvs: ConcurrentTransactionalKeyValueStore = ConcurrentTransactionalKeyValueStoreFactory.create()
 
 
     routing {
@@ -54,7 +54,7 @@ fun Application.configureRouting() {
             }
 
             when (
-                val executionResult = trkvs.onCommand(command)
+                val executionResult = ctrkvs.onCommand(command)
             ) {
                 is ExecutionResult.Success -> call.respondText(
                     status = HttpStatusCode.OK,

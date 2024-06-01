@@ -19,6 +19,7 @@ compileSdk = "34"  # Upside Down Cake
 buildTools = "34.0.0"
 
 androidGradlePlugin = "8.2.0"
+coroutines = "1.8.0"
 composeBom = "2024.02.02"  # https://developer.android.com/jetpack/compose/bom/bom-mapping
 composeCompilerExtension = "1.5.10"
 
@@ -35,6 +36,7 @@ kotlinWrappersBom = "1.0.0-pre.718"
 [libraries]
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 truthish = "com.varabyte.truthish:truthish:1.0.1"  # Google Truth for KMP (https://github.com/varabyte/truthish)
 

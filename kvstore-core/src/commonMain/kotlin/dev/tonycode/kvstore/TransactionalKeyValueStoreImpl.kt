@@ -9,7 +9,7 @@ import dev.tonycode.kvstore.TransactionalKeyValueStore.ExecutionResult
  *
  * Not thread-safe
  */
-class TransactionalKeyValueStoreImpl : TransactionalKeyValueStore {
+internal class TransactionalKeyValueStoreImpl : TransactionalKeyValueStore {
 
     private val store = mutableListOf(hashMapOf<String, String>())
 

@@ -10,7 +10,7 @@ import dev.tonycode.kvstore.tree.redblacktree.RedBlackTree
  *
  * Not thread-safe
  */
-class TransactionalKeyValueStoreImpl2 : TransactionalKeyValueStore {
+internal class TransactionalKeyValueStoreRbtImpl : TransactionalKeyValueStore {
 
     private val store = mutableListOf(RedBlackTree<String, String>())
 

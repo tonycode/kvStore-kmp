@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.logback)
 
     implementation(projects.kvstoreCore)
+    implementation(projects.kvstoreCoroutines)
 }
 
 

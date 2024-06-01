@@ -1,17 +1,23 @@
 kvStore-kmp - key-value store with transactions support
 =======================================================
 
-KotlinMultiPlatform (KMP) library with interfaces for several platforms
+Kotlin Multiplatform (KMP) library with demo apps for several platforms (`cli-native`, `cli-jvm`, `backend-jvm`, `frontend-android`, `frontend-web-js`)
 
 NB: The main project's goal is a demonstration of KMP library development, artifacts aren't published yet
 
 
-- interface: [TransactionalKeyValueStore](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStore.kt)
-- [TransactionalKeyValueStoreImpl](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl.kt)
-    - not thread-safe in-memory impl based on Kotlin stdlib's HashMap
-- [TransactionalKeyValueStoreImpl2](/kv-store/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl2.kt)
-    - not thread-safe in-memory impl based on RedBlackTree (adapted version of [aostrouhhov/trees/redblacktree](https://github.com/aostrouhhov/trees/tree/master/src/redblacktree))
-
+- simple non-thread safe
+    - interface: [TransactionalKeyValueStore](/kvstore-core/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStore.kt)
+    - factory: [TransactionalKeyValueStoreFactory](/kvstore-core/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreFactory.kt)
+    - [TransactionalKeyValueStoreImpl](/kvstore-core/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreImpl.kt)
+        - in-memory impl based on Kotlin stdlib's HashMap
+    - [TransactionalKeyValueStoreRbtImpl](/kvstore-core/src/commonMain/kotlin/dev/tonycode/kvstore/TransactionalKeyValueStoreRbtImpl.kt)
+        - in-memory impl based on RedBlackTree (adapted version of [aostrouhhov/trees/redblacktree](https://github.com/aostrouhhov/trees/tree/master/src/redblacktree))
+- thread-safe
+    - interface: [ConcurrentTransactionalKeyValueStore](/kvstore-coroutines/src/commonMain/kotlin/dev/tonycode/kvstore/coroutines/ConcurrentTransactionalKeyValueStore.kt)
+    - factory: [ConcurrentTransactionalKeyValueStoreFactory](/kvstore-coroutines/src/commonMain/kotlin/dev/tonycode/kvstore/coroutines/ConcurrentTransactionalKeyValueStoreFactory.kt)
+    - [ConcurrentTransactionalKeyValueStoreImpl](/kvstore-coroutines/src/commonMain/kotlin/dev/tonycode/kvstore/coroutines/ConcurrentTransactionalKeyValueStoreImpl.kt)
+        - in-memory impl, backed by HashMap or RedBlackTree impl
 
 commands:
 

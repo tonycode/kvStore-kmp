@@ -93,7 +93,7 @@ interface TransactionalKeyValueStore {
     }
 
     companion object {
-        val commands = listOf(
+        val commands = listOf(  // Pair(commandKey, commandArgs)
             Pair("SET", "key value"),
             Pair("GET", "key"),
             Pair("DELETE", "key"),

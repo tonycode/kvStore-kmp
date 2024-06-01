@@ -30,6 +30,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
     "kvstore-core",
+    "kvstore-coroutines",
     "cli-native",
     "cli-jvm",
     "backend-jvm",
