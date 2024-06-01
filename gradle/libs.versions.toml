@@ -4,6 +4,8 @@
 gradle = "8.7"  # https://gradle.org/releases/
 kotlin = "1.9.22"  # match with "kotlin-dsl" plugin
                    # check compose-compiler compatibility: https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+kvstore = "0.1.0"
+
 ## jvm
 java = "11"
 
