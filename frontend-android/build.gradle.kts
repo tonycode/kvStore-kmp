@@ -127,7 +127,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.core.ktx)
 
-    implementation(projects.kvStore)
+    implementation(projects.kvstoreCore)
     implementation(projects.frontendCommon)
 
     //// UI

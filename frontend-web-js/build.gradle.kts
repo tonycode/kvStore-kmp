@@ -65,7 +65,7 @@ kotlin {
                 implementation(project.dependencies.platform(libs.kotlin.bom.get()))  // Align versions of all Kotlin components
                 implementation(libs.kotlin.stdlib)
 
-                implementation(projects.kvStore)
+                implementation(projects.kvstoreCore)
                 implementation(projects.frontendCommon)
 
                 //// UI

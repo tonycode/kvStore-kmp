@@ -7,7 +7,7 @@ plugins {
 
 
 val projectGroup = "dev.tonycode.kmp"
-val projectArtifact = "kvstore"
+val projectArtifact = "kvstore-core"
 val projectVersion = libs.versions.kvstore.get()
 
 group = projectGroup
