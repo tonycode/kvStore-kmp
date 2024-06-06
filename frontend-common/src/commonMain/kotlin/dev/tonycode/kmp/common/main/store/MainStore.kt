@@ -27,7 +27,7 @@ interface MainStore : Store<Intent, State, Nothing> {
         val value: String?,
         val executionResult: String?,
         val isExecutionSuccessful: Boolean,
-        val executionHistory: List<String>,
+        val executionHistory: List<HistoryItem>,
     ) : JvmSerializable {
         constructor() : this(  // no-arg constructor is required for js & ios targets
             commands = TransactionalKeyValueStore.commands.map { it.command },
@@ -45,6 +45,8 @@ interface MainStore : Store<Intent, State, Nothing> {
             get() = (selectedCommand != null) &&
                 (!hasKeyInput || !key.isNullOrBlank()) &&
                 (!hasValueInput || !value.isNullOrBlank())
+
+        data class HistoryItem(val commandString: String, val output: String?, val succeed: Boolean = true)
     }
 
 }

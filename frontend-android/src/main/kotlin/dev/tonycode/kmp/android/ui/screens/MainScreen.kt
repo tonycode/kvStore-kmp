@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import dev.tonycode.kmp.android.ui.screens.components.ExecutionHistory
 import dev.tonycode.kmp.android.ui.theme.MinAppPalette
 import dev.tonycode.kmp.common.IDispatchers
 import dev.tonycode.kmp.common.main.MainController
@@ -90,7 +91,7 @@ fun MainScreen(
                 Text(
                     text = item,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(15))
+                        .clip(MaterialTheme.shapes.small)
                         .background(
                             color = if (item != model.selectedCommand) MinAppPalette.Teal200 else MinAppPalette.Purple200,
                         )
@@ -147,8 +148,21 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .background(color = Color.LightGray, shape = RoundedCornerShape(25))
+                    .background(color = Color.LightGray, shape = MaterialTheme.shapes.medium)
                     .padding(16.dp)
+            )
+        }
+
+        Spacer(Modifier.height(32.dp))
+
+        if (model.executionHistory.isNotEmpty()) {
+            Text(
+                text = "History",
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+
+            ExecutionHistory(
+                items = model.executionHistory
             )
         }
     }

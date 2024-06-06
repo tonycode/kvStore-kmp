@@ -78,15 +78,22 @@ internal fun StoreFactory.mainStore(
 
         is Msg.CommandExecuted -> {
             val executionResultString = when (msg.executionResult) {
-                is ExecutionResult.Success -> "OK"
+                is ExecutionResult.Success -> null
                 is ExecutionResult.SuccessWithResult -> msg.executionResult.result
                 is ExecutionResult.SuccessWithIntResult -> msg.executionResult.result.toString()
                 is ExecutionResult.Error -> msg.executionResult.errorMessage
             }
+            val successful = (msg.executionResult !is ExecutionResult.Error)
+
             copy(
-                executionResult = executionResultString,
-                isExecutionSuccessful = (msg.executionResult !is ExecutionResult.Error),
-                executionHistory = (executionHistory + "${ msg.commandString } => $executionResultString")
+                executionResult = executionResultString ?: "OK",
+                isExecutionSuccessful = successful,
+                executionHistory = executionHistory +
+                    State.HistoryItem(
+                        commandString = msg.commandString,
+                        output = executionResultString,
+                        succeed = successful
+                    )
             )
         }
     } }
