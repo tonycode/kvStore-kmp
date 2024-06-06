@@ -29,6 +29,8 @@ internal class TransactionalKeyValueStoreImpl : TransactionalKeyValueStore {
             }
 
             is Command.Delete -> {
+                if (!store.last().containsKey(command.key)) return ExecutionResult.Error(MSG_KEY_NOT_SET)
+
                 store.last().remove(command.key)
                 return ExecutionResult.Success
             }

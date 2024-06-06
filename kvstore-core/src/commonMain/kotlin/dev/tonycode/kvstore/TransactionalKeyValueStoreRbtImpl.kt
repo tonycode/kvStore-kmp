@@ -29,6 +29,8 @@ internal class TransactionalKeyValueStoreRbtImpl : TransactionalKeyValueStore {
             }
 
             is Command.Delete -> {
+                store.last().find(command.key) ?: return ExecutionResult.Error(MSG_KEY_NOT_SET)
+
                 store.last().delete(command.key)
                 return ExecutionResult.Success
             }

@@ -8,11 +8,13 @@ import kotlin.test.Test
 
 class TransactionalKeyValueStoreUnitTest {
 
-    private val trkvs: TransactionalKeyValueStore = TransactionalKeyValueStoreFactory.create()
+    private lateinit var trkvs: TransactionalKeyValueStore
 
 
     @Test
     fun set_and_get_value() {
+        createStore()
+
         assertThat(trkvs.onCommand(Command.Set("foo", "123")))
             .isEqualTo(ExecutionResult.Success)
 
@@ -21,7 +23,20 @@ class TransactionalKeyValueStoreUnitTest {
     }
 
     @Test
+    fun delete_non_existent_value() {
+        createStore()
+
+        assertThat(trkvs.onCommand(Command.Delete("foo")))
+            .isEqualTo(ExecutionResult.Error(MSG_KEY_NOT_SET))
+    }
+
+    @Test
     fun delete_a_value() {
+        createStore()
+
+        assertThat(trkvs.onCommand(Command.Set("foo", "123")))
+            .isEqualTo(ExecutionResult.Success)
+
         assertThat(trkvs.onCommand(Command.Delete("foo")))
             .isEqualTo(ExecutionResult.Success)
 
@@ -31,6 +46,8 @@ class TransactionalKeyValueStoreUnitTest {
 
     @Test
     fun get_unknown_key_and_update_existing_key() {
+        createStore()
+
         assertThat(trkvs.onCommand(Command.Set("foo", "123")))
             .isEqualTo(ExecutionResult.Success)
 
@@ -46,6 +63,8 @@ class TransactionalKeyValueStoreUnitTest {
 
     @Test
     fun count_the_number_of_occurrences_of_a_value() {
+        createStore()
+
         assertThat(trkvs.onCommand(Command.Set("foo", "123")))
             .isEqualTo(ExecutionResult.Success)
 
@@ -64,6 +83,8 @@ class TransactionalKeyValueStoreUnitTest {
 
     @Test
     fun commit_a_transaction() {
+        createStore()
+
         assertThat(trkvs.onCommand(Command.Set("bar", "123")))
             .isEqualTo(ExecutionResult.Success)
 
@@ -97,6 +118,8 @@ class TransactionalKeyValueStoreUnitTest {
 
     @Test
     fun rollback_a_transaction() {
+        createStore()
+
         assertThat(trkvs.onCommand(Command.Set("foo", "123")))
             .isEqualTo(ExecutionResult.Success)
 
@@ -133,6 +156,8 @@ class TransactionalKeyValueStoreUnitTest {
 
     @Test
     fun nested_transactions() {
+        createStore()
+
         assertThat(trkvs.onCommand(Command.Set("foo", "123")))
             .isEqualTo(ExecutionResult.Success)
 
@@ -177,6 +202,10 @@ class TransactionalKeyValueStoreUnitTest {
 
         assertThat(trkvs.onCommand(Command.Get("foo")))
             .isEqualTo(ExecutionResult.SuccessWithResult("123"))
+    }
+
+    private fun createStore() {
+        trkvs = TransactionalKeyValueStoreFactory.create()
     }
 
 }
