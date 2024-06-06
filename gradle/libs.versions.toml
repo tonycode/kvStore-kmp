@@ -6,8 +6,14 @@ kotlin = "1.9.22"  # match with "kotlin-dsl" plugin
                    # check compose-compiler compatibility: https://developer.android.com/jetpack/androidx/releases/compose-kotlin
 kvstore = "0.2.0"
 
+## multiplatform
+coroutines = "1.8.0"
+mvikotlin = "4.0.0"
+essenty = "2.0.0"
+
 ## jvm
 java = "11"
+jacoco = "0.8.11"
 
 ## backend
 ktor = "2.3.11"
@@ -17,26 +23,31 @@ minSdk = "21"  # Lollipop (required for Jetpack Compose)
 targetSdk = "34"  # Upside Down Cake
 compileSdk = "34"  # Upside Down Cake
 buildTools = "34.0.0"
-
 androidGradlePlugin = "8.2.0"
-coroutines = "1.8.0"
 composeBom = "2024.02.02"  # https://developer.android.com/jetpack/compose/bom/bom-mapping
 composeCompilerExtension = "1.5.10"
-
-hilt = "2.51"
-jacoco = "0.8.11"
 
 ## web
 yarn = "1.22.22"  # https://www.npmjs.com/package/yarn
 nodejs = "20.14.0"  # https://nodejs.org/en - LTS
-
 kotlinWrappersBom = "1.0.0-pre.718"
 
 
 [libraries]
+## multiplatform
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+
+mvikotlin = { module = "com.arkivanov.mvikotlin:mvikotlin", version.ref = "mvikotlin" }
+mvikotlin-main = { module = "com.arkivanov.mvikotlin:mvikotlin-main", version.ref = "mvikotlin" }
+mvikotlin-logging = { module = "com.arkivanov.mvikotlin:mvikotlin-logging", version.ref = "mvikotlin" }
+mvikotlin-timetravel = { module = "com.arkivanov.mvikotlin:mvikotlin-timetravel", version.ref = "mvikotlin" }
+mvikotlin-extensions-coroutines = { module = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines", version.ref = "mvikotlin" }
+essenty = { module = "com.arkivanov.essenty:lifecycle", version.ref = "essenty" }
+stateKeeper = { module = "com.arkivanov.essenty:state-keeper", version.ref = "essenty" }
+instanceKeeper = { module = "com.arkivanov.essenty:instance-keeper", version.ref = "essenty" }
+
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 truthish = "com.varabyte.truthish:truthish:1.0.1"  # Google Truth for KMP (https://github.com/varabyte/truthish)
 
@@ -82,7 +93,9 @@ gradle-versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }  
 buildconfig = { id = "com.github.gmazzo.buildconfig", version = "5.3.5" }  # Generates BuildConfig object (https://github.com/gmazzo/gradle-buildconfig-plugin)
 localproperties = { id = "com.github.b3er.local.properties", version = "1.1" }  # Merge local.properties into project.properties (https://github.com/b3er/gradle-local-properties-plugin)
 grgit = { id = "org.ajoberstar.grgit", version = "5.2.2" }  # Manipulate with project's git repo (https://github.com/ajoberstar/grgit)
+
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }

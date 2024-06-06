@@ -17,8 +17,8 @@ android {
 
     defaultConfig {
         applicationId = "dev.tonycode.kmp.android"
-        versionCode = 2
-        versionName = "0.1.0"
+        versionCode = 3
+        versionName = "0.1.1"
         archivesName = "app-v$versionName-build_$versionCode"
 
         minSdk = libs.versions.minSdk.get().toInt()

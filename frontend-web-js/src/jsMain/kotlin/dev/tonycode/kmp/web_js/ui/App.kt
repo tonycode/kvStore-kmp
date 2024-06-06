@@ -4,33 +4,63 @@ import antd.Button
 import antd.ButtonType
 import antd.Direction
 import antd.Input
-import antd.Option
-import antd.Select
+import antd.Radio
+import antd.RadioOptionType
 import antd.Size
 import antd.Space
 import antd.Typography
-import antd.setAddonBefore
-import antd.setDefaultValue
-import dev.tonycode.kmp.common.KvStoreUiState
+import antd.TypographyType
+import antd.setOptions
+import antd.setValue
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import dev.tonycode.kmp.common.IDispatchers
+import dev.tonycode.kmp.common.main.MainController
+import dev.tonycode.kmp.common.main.MainView
+import dev.tonycode.kmp.common.main.store.MainStore.Intent
+import dev.tonycode.kmp.common.main.store.MainStore.State
+import dev.tonycode.kmp.web_js.ui.components.ExecutionHistory
 import dev.tonycode.kmp.web_js.util.getBuildInfo
+import dev.tonycode.kmp.web_js.util.useInstanceKeeper
+import dev.tonycode.kmp.web_js.util.useLifecycle
 import dev.tonycode.kvstore.TransactionalKeyValueStore
-import dev.tonycode.kvstore.TransactionalKeyValueStoreFactory
 import react.FC
 import react.Props
-import react.create
 import react.dom.html.ReactHTML.code
 import react.dom.html.ReactHTML.hr
+import react.useEffectOnce
+import react.useMemo
 import react.useState
 
 
-val App = FC<Props>("App") {
+external interface AppProps : Props {
+    var storeFactory: StoreFactory
+    var trkvs: TransactionalKeyValueStore
+    var dispatchers: IDispatchers
+}
 
-    val trkvs: TransactionalKeyValueStore by useState(TransactionalKeyValueStoreFactory.create())
+val App = FC<AppProps>("App") { props ->
+    val lifecycle = useLifecycle()
+    val instanceKeeper = useInstanceKeeper()
 
-    var commandKey: String by useState(TransactionalKeyValueStore.commands.first().first)
-    var commandArgs: String? by useState(TransactionalKeyValueStore.commands.first().second)
+    val controller = useMemo {
+        MainController(
+            storeFactory = props.storeFactory,
+            trkvs = props.trkvs,
+            instanceKeeper = instanceKeeper,
+            dispatchers = props.dispatchers,
+        )
+    }
 
-    var uiState by useState(KvStoreUiState())
+    var model by useState(::State)
+    val view = useMemo {
+        object : ViewProxy<State, Intent>(
+            render = { model = it }
+        ), MainView {}
+    }
+
+    useEffectOnce {
+        controller.onViewCreated(view, lifecycle)
+    }
 
 
     Space {
@@ -38,49 +68,73 @@ val App = FC<Props>("App") {
         size = Size.large
 
         Typography.Title {
-            level = 5
+            level = 3
             +"Hello from Kotlin/JS + React!"
         }
-        Typography.Text {
-            code = true
-            +"(commandKey = $commandKey ; commandArgs = $commandArgs)"
+
+        Radio.Group {
+            setOptions(model.commands)
+            model.selectedCommand?.let { setValue(it) }
+            optionType = RadioOptionType.button
+            onChange = {
+                view.dispatch(Intent.SelectCommand(command = it.target.value))
+            }
         }
 
-        Input {
-            setAddonBefore(Select.create {
-                options = TransactionalKeyValueStore.commands.map { Option(it.first) }.toTypedArray()
-                setDefaultValue(commandKey)
-                onChange = { newCmd ->
-                    commandKey = newCmd
-                    commandArgs = TransactionalKeyValueStore.commands.firstOrNull { it.first == newCmd }?.second
-                }
-            })
-            value = commandArgs ?: ""
+        if (model.hasKeyInput) {
+            Space {
+                direction = Direction.horizontal
+                size = Size.middle
 
-            onChange = {
-                commandArgs = it.target.value
+                Typography.Text { +"key = " }
+                Input {
+                    value = model.key ?: ""
+                    onChange = {
+                        view.dispatch(Intent.SetKeyArgument(key = it.target.value))
+                    }
+                }
+            }
+        }
+
+        if (model.hasValueInput) {
+            Space {
+                direction = Direction.horizontal
+                size = Size.small
+
+                Typography.Text { +"value = " }
+                Input {
+                    value = model.value ?: ""
+                    onChange = {
+                        view.dispatch(Intent.SetValueArgument(value = it.target.value))
+                    }
+                }
             }
         }
 
         Button {
-            type = ButtonType.primary
             +"Execute"
+            type = ButtonType.primary
+            disabled = !model.isExecuteButtonEnabled
 
             onClick = {
-                val commandString = if (commandArgs != null) "$commandKey $commandArgs" else commandKey
-                //console.log("commandString = $commandString")  //DEBUG
-
-                uiState = uiState.mutate(commandString, trkvs)
+                view.dispatch(Intent.ExecuteCommand)
             }
         }
 
-        uiState.executionResult?.let {
+        model.executionResult?.let {
             Typography.Text {
                 code = true
+                type = if (model.isExecutionSuccessful) TypographyType.success else TypographyType.warning
+
                 +it
             }
         }
 
+        hr()
+
+        ExecutionHistory {
+            items = model.executionHistory
+        }
 
         hr()
         code { +getBuildInfo() }

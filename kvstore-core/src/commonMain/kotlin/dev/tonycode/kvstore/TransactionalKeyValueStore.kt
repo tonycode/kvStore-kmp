@@ -92,15 +92,22 @@ interface TransactionalKeyValueStore {
         data class Error(val errorMessage: String) : ExecutionResult()
     }
 
+    data class CommandDescription(
+        val command: String,
+        val hasKeyArgument: Boolean = false,
+        val hasValueArgument: Boolean = false,
+    )
+
+
     companion object {
-        val commands = listOf(  // Pair(commandKey, commandArgs)
-            Pair("SET", "key value"),
-            Pair("GET", "key"),
-            Pair("DELETE", "key"),
-            Pair("COUNT", "value"),
-            Pair("BEGIN", null),
-            Pair("COMMIT", null),
-            Pair("ROLLBACK", null),
+        val commands: List<CommandDescription> = listOf(
+            CommandDescription("SET", hasKeyArgument = true, hasValueArgument = true),
+            CommandDescription("GET", hasKeyArgument = true),
+            CommandDescription("DELETE", hasKeyArgument = true),
+            CommandDescription("COUNT", hasValueArgument = true),
+            CommandDescription("BEGIN"),
+            CommandDescription("COMMIT"),
+            CommandDescription("ROLLBACK"),
         )
     }
 

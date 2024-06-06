@@ -1,8 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
+import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
-import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
 
 
 plugins {
@@ -18,8 +18,8 @@ val projectGroup = "dev.tonycode.kmp"
 val projectArtifact = "web-js"
 val projectPackage = "$projectGroup.$projectArtifact".replace("-", "_")
 val projectName = rootProject.name
-val projectVersion = "0.1.1"
-val buildNumber = 3
+val projectVersion = "0.2.0"
+val buildNumber = 4
 val isProduction: Boolean = (properties["prod"] == "true")  // turn off debugging stuff (sourcemaps/logging/..) for prod
 
 group = projectGroup
@@ -64,6 +64,15 @@ kotlin {
                 //// Core
                 implementation(project.dependencies.platform(libs.kotlin.bom.get()))  // Align versions of all Kotlin components
                 implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlinx.coroutines.core)
+
+                implementation(libs.mvikotlin)
+                implementation(libs.mvikotlin.main)
+                implementation(libs.mvikotlin.logging)
+                //implementation(libs.mvikotlin.timetravel)
+                implementation(libs.mvikotlin.extensions.coroutines)
+                implementation(libs.essenty)
+                implementation(libs.instanceKeeper)
 
                 implementation(projects.kvstoreCore)
                 implementation(projects.frontendCommon)

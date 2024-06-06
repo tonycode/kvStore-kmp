@@ -40,7 +40,7 @@ fun MainScreen(
 ) {
 
     var commandIdx by remember { mutableIntStateOf(0) }
-    var commandArgs by remember { mutableStateOf(TransactionalKeyValueStore.commands[0].second) }
+    var commandArgs by remember { mutableStateOf("") }
 
     val uiState by mainViewModel.uiState.collectAsState()
 
@@ -62,14 +62,14 @@ fun MainScreen(
         ) {
             itemsIndexed(TransactionalKeyValueStore.commands) { index, item ->
                 Text(
-                    text = item.first,
+                    text = item.command,
                     modifier = Modifier
                         .background(
                             color = if (index != commandIdx) Color.LightGray else Color.Yellow,
                             shape = RoundedCornerShape(15)
                         ).clickable {
                             commandIdx = index
-                            commandArgs = item.second
+                            commandArgs = ""
                         }.padding(horizontal = 4.dp, vertical = 2.dp)
                 )
             }
@@ -77,7 +77,8 @@ fun MainScreen(
         Spacer(Modifier.height(4.dp))
 
         // Optional command arguments
-        if (TransactionalKeyValueStore.commands[commandIdx].second != null) {
+        val cd = TransactionalKeyValueStore.commands[commandIdx]
+        if (cd.hasKeyArgument || cd.hasValueArgument) {
             Text(
                 text = "Enter arguments:",
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -86,7 +87,7 @@ fun MainScreen(
 
             TextField(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                value = commandArgs ?: "",
+                value = commandArgs,
                 onValueChange = { commandArgs = it },
             )
             Spacer(Modifier.height(12.dp))
@@ -97,8 +98,7 @@ fun MainScreen(
             modifier = Modifier.padding(horizontal = 16.dp),
             onClick = {
                 mainViewModel.onCommand(
-                    TransactionalKeyValueStore.commands[commandIdx].first +
-                        (if (commandArgs != null) " $commandArgs" else "")
+                    cd.command + (if (!commandArgs.isNullOrBlank()) " $commandArgs" else "")
                 )
             }
         ) { Text("Execute") }
