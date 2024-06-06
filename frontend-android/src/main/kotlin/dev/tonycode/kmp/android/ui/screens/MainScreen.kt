@@ -10,39 +10,65 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.tonycode.kmp.android.ui.preview.ScreenPreview
-import dev.tonycode.kmp.android.ui.util.FontScalePreviews
-import dev.tonycode.kmp.android.ui.util.LightDarkPreviews
+import com.arkivanov.essenty.instancekeeper.InstanceKeeper
+import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import dev.tonycode.kmp.android.ui.theme.MinAppPalette
+import dev.tonycode.kmp.common.IDispatchers
+import dev.tonycode.kmp.common.main.MainController
+import dev.tonycode.kmp.common.main.MainView
+import dev.tonycode.kmp.common.main.store.MainStore
+import dev.tonycode.kmp.common.main.store.MainStore.Intent
+import dev.tonycode.kmp.common.utils.ViewProxy
 import dev.tonycode.kvstore.TransactionalKeyValueStore
 
 
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    mainViewModel: MainViewModel = viewModel(),
+    storeFactory: StoreFactory,
+    trkvs: TransactionalKeyValueStore,
+    lifecycle: Lifecycle,
+    instranceKeeper: InstanceKeeper,
+    dispatches: IDispatchers,
 ) {
 
-    var commandIdx by remember { mutableIntStateOf(0) }
-    var commandArgs by remember { mutableStateOf("") }
+    val controller: MainController by remember { mutableStateOf(
+        MainController(
+            storeFactory,
+            trkvs,
+            instranceKeeper,
+            dispatches,
+        )
+    ) }
 
-    val uiState by mainViewModel.uiState.collectAsState()
+    var model : MainStore.State by remember { mutableStateOf(MainStore.State()) }
+
+    val view by remember { mutableStateOf(
+        object : ViewProxy<MainStore.State, Intent>(
+            render = { model = it }
+        ), MainView {}
+    ) }
+
+    LaunchedEffect(true) {
+        controller.onViewCreated(view, lifecycle)
+    }
 
 
     Column(
@@ -60,53 +86,62 @@ fun MainScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            itemsIndexed(TransactionalKeyValueStore.commands) { index, item ->
+            items(model.commands) { item ->
                 Text(
-                    text = item.command,
+                    text = item,
                     modifier = Modifier
+                        .clip(RoundedCornerShape(15))
                         .background(
-                            color = if (index != commandIdx) Color.LightGray else Color.Yellow,
-                            shape = RoundedCornerShape(15)
-                        ).clickable {
-                            commandIdx = index
-                            commandArgs = ""
-                        }.padding(horizontal = 4.dp, vertical = 2.dp)
+                            color = if (item != model.selectedCommand) MinAppPalette.Teal200 else MinAppPalette.Purple200,
+                        )
+                        .clickable {
+                            view.dispatch(Intent.SelectCommand(command = item))
+                        }
+                        .padding(horizontal = 6.dp, vertical = 4.dp)
                 )
             }
         }
         Spacer(Modifier.height(4.dp))
 
         // Optional command arguments
-        val cd = TransactionalKeyValueStore.commands[commandIdx]
-        if (cd.hasKeyArgument || cd.hasValueArgument) {
-            Text(
-                text = "Enter arguments:",
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-            Spacer(Modifier.height(12.dp))
-
+        if (model.hasKeyInput) {
             TextField(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                value = commandArgs,
-                onValueChange = { commandArgs = it },
+                label = { Text("key") },
+                value = model.key ?: "",
+                onValueChange = {
+                    view.dispatch(Intent.SetKeyArgument(key = it))
+                },
             )
             Spacer(Modifier.height(12.dp))
         }
 
+        if (model.hasValueInput) {
+            TextField(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                label = { Text("value") },
+                value = model.value ?: "",
+                onValueChange = {
+                    view.dispatch(Intent.SetValueArgument(value = it))
+                },
+            )
+            Spacer(Modifier.height(12.dp))
+        }
+
+        Spacer(Modifier.height(8.dp))
 
         Button(
             modifier = Modifier.padding(horizontal = 16.dp),
+            enabled = model.isExecuteButtonEnabled,
             onClick = {
-                mainViewModel.onCommand(
-                    cd.command + (if (!commandArgs.isNullOrBlank()) " $commandArgs" else "")
-                )
+                view.dispatch(Intent.ExecuteCommand)
             }
         ) { Text("Execute") }
 
         Spacer(Modifier.height(24.dp))
 
         // Execution result
-        uiState.executionResult?.let {
+        model.executionResult?.let {
             Text(
                 text = it,
                 modifier = Modifier
@@ -120,9 +155,9 @@ fun MainScreen(
 
 }
 
-@LightDarkPreviews
-@FontScalePreviews
-@Composable
-fun MainScreenPreview() = ScreenPreview {
-    MainScreen()
-}
+//@LightDarkPreviews
+//@FontScalePreviews
+//@Composable
+//fun MainScreenPreview() = ScreenPreview {
+//    MainScreen()
+//}

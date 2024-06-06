@@ -1,7 +1,7 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 
 
 plugins {
@@ -17,8 +17,8 @@ android {
 
     defaultConfig {
         applicationId = "dev.tonycode.kmp.android"
-        versionCode = 3
-        versionName = "0.1.1"
+        versionCode = 4
+        versionName = "0.2.0"
         archivesName = "app-v$versionName-build_$versionCode"
 
         minSdk = libs.versions.minSdk.get().toInt()
@@ -127,6 +127,11 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.core.ktx)
 
+    implementation(libs.mvikotlin)
+    implementation(libs.mvikotlin.main)
+    implementation(libs.mvikotlin.logging)
+    implementation(libs.essenty)
+
     implementation(projects.kvstoreCore)
     implementation(projects.frontendCommon)
 
@@ -134,7 +139,6 @@ dependencies {
     implementation(libs.androidx.lifecycle)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.android.material)

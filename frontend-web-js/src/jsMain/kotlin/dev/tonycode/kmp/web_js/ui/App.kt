@@ -18,6 +18,7 @@ import dev.tonycode.kmp.common.main.MainController
 import dev.tonycode.kmp.common.main.MainView
 import dev.tonycode.kmp.common.main.store.MainStore.Intent
 import dev.tonycode.kmp.common.main.store.MainStore.State
+import dev.tonycode.kmp.common.utils.ViewProxy
 import dev.tonycode.kmp.web_js.ui.components.ExecutionHistory
 import dev.tonycode.kmp.web_js.util.getBuildInfo
 import dev.tonycode.kmp.web_js.util.useInstanceKeeper

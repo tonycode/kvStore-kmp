@@ -1,4 +1,4 @@
-package dev.tonycode.kmp.web_js.ui
+package dev.tonycode.kmp.common.utils
 
 import com.arkivanov.mvikotlin.core.view.BaseMviView
 
